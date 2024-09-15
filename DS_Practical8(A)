@@ -1,0 +1,330 @@
+// Write C++ program for storing appointment schedule for day. Appointments
+//  are booked randomly using linked list. Set start and end time and min and
+//  max duration for visit slot. Write functions for- a) Display free slots b) Book
+//  appointment c) Cancel appointment (check validity, time bounds, availability)
+//  d) Sort list based on time e) Sort list based on time using pointer
+//  manipulation 
+
+#include<iostream>
+#include<iomanip>
+using namespace std;
+
+struct Appointment
+{
+    int startTime;
+    int endTime;
+    Appointment* next;
+    
+    Appointment(int start,int end):startTime(start),endTime(end),next(nullptr){}
+};
+Appointment* sortAppointments(Appointment* head,int ch);
+void displaySchedule(Appointment *head);
+void displayTime(int time)
+{
+    cout<<setw(2)<<setfill('0')<<time/60<<":"<<setw(2)<<setfill('0')<<time%60;
+    // cout<<(time)/60<<":"<<(time)%60;
+}
+
+void displaySchedule(Appointment *head)
+{
+    Appointment* temp=head;
+    int i=0;
+    cout<<"\n\t\t\t\t===========TODAY'S SCHEDULE============";
+    cout<<"\n\t\t\t\t=======================================";
+    while(temp!=nullptr)
+    {
+        cout<<"\n\t\t\t\tAppointment No."<<++i<<"\t";
+        displayTime(temp->startTime);
+        cout<<" - ";
+        displayTime(temp->endTime);
+        // cout<<(temp->startTime)/60<<":"<<(temp->startTime)%60;
+        // cout<<" to "<<(temp->endTime)/60<<":"<<(temp->endTime)%60;
+        cout<<endl;
+
+        temp=temp->next;
+    }
+}
+
+void sortAppointmentsPointerManipulation(Appointment*& head) {
+    if (!head || !head->next) return;
+
+    Appointment* sorted = nullptr;
+
+    while (head) {
+        Appointment* current = head;
+        head = head->next;
+
+        if (!sorted || sorted->startTime >= current->startTime) {
+            current->next = sorted;
+            sorted = current;
+        } else {
+            Appointment* temp = sorted;
+            while (temp->next && temp->next->startTime < current->startTime) {
+                temp = temp->next;
+            }
+            current->next = temp->next;
+            temp->next = current;
+        }
+    }
+
+    head = sorted;
+    cout<<"\n\t\t\t\tSORTING BY POINTER MANIPULATION";
+    displaySchedule(head);
+}
+
+void displayFreeSlots(Appointment* head,int dayStart,int dayEnd)
+{
+    head=sortAppointments(head,0);
+    Appointment* sorted=head;
+    cout<<"\n\t\t\t\t=========    FREE SLOTS    ============";
+    cout<<"\n\t\t\t\t=======================================";
+    if(dayStart<sorted->startTime)
+    {
+        cout<<"\n\t\t\t\t";
+        displayTime(dayStart);
+        cout<<" - ";
+        displayTime(sorted->startTime);
+        cout<<endl;
+    }
+    
+    while (sorted->next)
+    {
+        if(sorted->endTime<sorted->next->startTime)
+        {
+            cout<<"\n\t\t\t\t";
+            displayTime(sorted->endTime);
+            cout<<" - ";
+            displayTime(sorted->next->startTime);
+            cout<<endl;
+        }
+        sorted=sorted->next;
+    }
+    
+    if(sorted->endTime<dayEnd)
+    {
+        cout<<"\n\t\t\t\t";
+        displayTime(sorted->endTime);
+        cout<<" - ";
+        displayTime(dayEnd);
+        cout<<endl;
+    }
+}
+
+Appointment* sortAppointments(Appointment* head,int ch)
+{
+    if(!head)
+        return nullptr;
+
+    Appointment* newh=new Appointment(head->startTime,head->endTime);
+    Appointment* oritemp=head->next;
+    Appointment* temp=newh;
+    // Appointment* orih=head->next;
+    while(oritemp)
+    {
+        Appointment* newApp=new Appointment(oritemp->startTime,oritemp->endTime);
+        temp->next=newApp;
+        oritemp=oritemp->next;
+        temp=newApp;
+    }
+    
+    bool swapped;
+    do{
+        swapped=false;
+        Appointment* current=newh;
+        Appointment* prev=nullptr;
+        Appointment* next=newh->next;
+
+        while(next)
+        {
+            if(current->startTime>next->startTime)
+            {
+                swapped=true;
+                if(prev)
+                {
+                    prev->next=next;
+                }
+                else{
+                    newh=next;
+                }
+                current->next=next->next;
+                next->next=current;
+                prev=next;
+                next=current->next;
+            }
+            else{
+                prev=current;
+                current=next;
+                next=next->next;
+            }
+        }
+    }while(swapped);
+    if(ch==0)
+        return newh;
+    else{
+        displaySchedule(newh); 
+        return head;
+    }
+}
+
+
+bool bookAppointment(Appointment*& head,int startTime,int endTime,int minDuration,int maxDuration)
+{
+    if(startTime<8*60 || endTime>18*60)
+    {
+        cout<<"\n\t\t\t\tAppointments available only from 8:00 to 18:00";
+        return false;
+    }
+    if (endTime - startTime < minDuration || endTime - startTime > maxDuration) {
+        cout <<"\n\t\t\t\tInvalid duration for appointment!" << endl;
+        return false;
+    }
+    Appointment* newAppointment=new Appointment(startTime,endTime);
+    if(!head)
+    {
+        newAppointment->next=head;
+        head=newAppointment;
+
+        return true;
+    }
+    // if(!head || head->startTime>endTime)
+    // {
+    //     newAppointment->next=head;
+    //     head=newAppointment;
+
+    //     return true;
+    // }
+
+    Appointment* current=head;
+    while(current->next)
+    {
+        if(current->startTime==startTime && current->endTime==endTime)
+        {
+            cout<<"\n\t\t\t\tThis slot is already booked";
+            delete newAppointment;
+            return false;
+        }
+        current=current->next;
+    }
+    current->next=newAppointment;
+    return true;
+    // while(current->next && current->next->startTime<startTime)
+    // {
+    //     current=current->next;
+    // }
+    // if(current->endTime<=startTime && (!current->next || current->next->startTime>=endTime))
+    // {
+    //     newAppointment->next=current->next;
+    //     current->next=newAppointment;
+
+    //     return true;
+    // }
+
+    // cout << "\n\t\t\t\tTime slot not available!" << endl;
+    // delete newAppointment;
+    // return false;
+}
+
+bool cancelAppointment(Appointment*& head,int startTime,int endTime)
+{
+    if(!head)
+    {
+        cout<<"\n\n\t\t\t\tNo appointments to cancel"<<endl;
+        return false;
+    }
+    if(head->startTime==startTime && head->endTime==endTime)
+    {
+        Appointment* temp=head;
+        head=head->next;
+        delete temp;
+        return true;
+    }
+    Appointment* current=head;
+    while(current->next && !(current->next->startTime==startTime && current->next->endTime==endTime))
+    {
+        current=current->next;
+    }
+
+    if(current->next)
+    {
+        Appointment *temp=current->next;
+        current->next=temp->next;
+        delete temp;
+        return true;
+    }
+    cout<<"\n\t\t\t\tAppointment not found";
+    return false;
+}
+
+int main()
+{
+    Appointment* schedule=nullptr;
+    int minDuration=30;
+    int maxDuration=120;
+    int s_hr,s_min,end_hr,end_min;
+
+    cout<<"\n\t\t\t\t===============================";
+    cout<<"\n\t\t\t\tAPPOINTMENT SCHEDULING SOFTWARE";
+    cout<<"\n\t\t\t\t===============================";
+
+    int ch;
+    do
+    {
+        cout<<"\n1. Book an appointment\n2. Cancel an appointment\n3. Display Schedule\n4. Display free slots\n5. Sort list based on time\n6. Sort list by time using pointer manipulation\n7. Exit";
+        cout<<"\nEnter your choice:";
+        cin>>ch;
+        switch (ch)
+        {
+        case 1:
+            cout<<"\n\t\t\t\tEnter your appointment starttime in hour-minute:";
+            cout<<"\n\t\t\t\tHour : ";
+            cin>>s_hr;
+            cout<<"\t\t\t\tMinutes : ";
+            cin>>s_min;
+
+            cout<<"\n\t\t\t\tEnter your appointment endtime in hour-minute:";
+            cout<<"\n\t\t\t\tHour : ";
+            cin>>end_hr;
+            cout<<"\t\t\t\tMinutes : ";
+            cin>>end_min;
+
+            bookAppointment(schedule,(s_hr*60+s_min),(end_hr*60+end_min),minDuration,maxDuration);
+            break;
+        
+        case 2:
+            cout<<"\n\t\t\t\tEnter the appointment starttime in hour-minute that is to be deleted:";
+            cout<<"\n\t\t\t\tHour : ";
+            cin>>s_hr;
+            cout<<"\t\t\t\tMinutes : ";
+            cin>>s_min;
+
+            cout<<"\n\t\t\t\tEnter your appointment endtime in hour-minute that is to be deleted:";
+            cout<<"\n\t\t\t\tHour : ";
+            cin>>end_hr;
+            cout<<"\t\t\t\tMinutes : ";
+            cin>>end_min;
+            cancelAppointment(schedule,(s_hr*60+s_min),(end_hr*60+end_min));
+            break;
+        
+        case 3:
+            displaySchedule(schedule);
+            break;
+
+        case 4:
+            displayFreeSlots(schedule,8*60,21*60);
+            break;
+        
+        case 5:
+            sortAppointments(schedule,ch);
+            break;
+
+        case 6:
+            sortAppointmentsPointerManipulation(schedule);
+            break;
+        
+        default:
+            break;
+        }
+    }while(ch!=7);
+
+    return 0;
+}
