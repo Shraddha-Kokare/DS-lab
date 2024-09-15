@@ -1,0 +1,116 @@
+def union(A,B):
+
+    C = []
+
+    for i in A:
+        C += [i]
+
+    for i in B:
+        flag = 0
+        for j in A:
+            if i == j:
+                flag = 1
+            
+        if(flag == 0):
+            C += [i]
+
+    return C
+
+def intersection(A,B):
+
+    C = []
+
+    for i in A:
+        flag = 0
+        for j in B:
+            if i == j:
+                flag = 1
+            
+        if flag == 1:
+            C += [i]
+
+    return C
+
+def differnce(A,B):
+
+    C = []
+
+    for i in A:
+        flag = 0
+        for j in B:
+            if i == j:
+                flag = 1
+            
+        if flag == 0:
+            C += [i]
+
+    return C
+
+
+print("---------------------------------------------------------------------")
+U = [1,2,3,4,5,6,7,8,9,10]
+print("The Universal Set Contains the following ROll Numbers ",U)
+print("---------------------------------------------------------------------")
+
+A = []
+
+print("Enter number of Students who play Cricket ")
+a = int(input())
+
+print("Enter ", a , " Roll Number of those Students")
+
+for i in range(0,a):
+    num = int(input())
+    A.append(num)
+
+print("Roll Number of Students who play Cricket are ",A)
+
+print("---------------------------------------------------------------------")
+
+B = []
+
+print("Enter number of Students who play Badminton ")
+b = int(input())
+
+print("Enter ", b , " Roll Number of those Students")
+
+
+for i in range(0,b):
+    num = int(input())
+    B.append(num)
+
+print("Roll Number of Students who play Badminton are ",B)
+print("---------------------------------------------------------------------")
+
+C = []
+
+print("Enter number of Students who play Football ")
+c = int(input())
+
+print("Enter ", c , " Roll Number of those Students")
+
+
+for i in range(0,c):
+    num = int(input())
+    C.append(num)
+
+print("Roll Number of Students who play Football are ",C)
+
+
+print("---------------------------------------------------------------------")
+int_A_C = intersection(A,B)
+print("List of Students who play Cricket and Badminton are ", int_A_C)
+print("---------------------------------------------------------------------")
+
+union_A_B = union(A,B)
+
+print("List of Students who play Either Cricket or Badminton but not both ", differnce(union_A_B,int_A_C))
+print("---------------------------------------------------------------------")
+
+print("No of Students who play Neither Cricket nor Badminton ", differnce(U,union_A_B))
+print("---------------------------------------------------------------------")
+
+z = intersection(A,C)
+
+print("No of Students who play Cricket and Football but not Badminton : ",differnce(z,B))
+print("---------------------------------------------------------------------")
