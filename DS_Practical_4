@@ -1,0 +1,163 @@
+class Searching:
+    iterationCount = 0
+
+
+    def linearSearch(self,ls,num1): 
+
+        self.iterationCount = 0
+        print("Enter the Roll Number you want to Search ? ")
+        rno = int(input())
+
+        index = -1
+
+        for i in range(0,num1):
+            if(rno == ls[i]):
+                self.iterationCount+=1
+                return i
+        
+        return index
+    
+    def SentinalSearch(self,ls,num1): 
+
+        self.iterationCount = 0
+        print("Enter the Roll Number you want to Search ? ")
+        rno = int(input())
+
+        last = ls[num1 - 1]
+        ls[num1 - 1] = rno
+
+        i = 0
+        while(rno != ls[i]):
+            self.iterationCount+=1
+            i = i + 1
+
+        ls[num1 - 1] = last
+
+        if(i < num1 - 1 or ls[num1 - 1] == rno):
+            return i
+        else:
+            return -1
+        
+    def binarySearch(self,ls,num1):
+
+        self.iterationCount = 0
+        print("Enter the Roll Number you want to Search ? ")
+        rno = int(input())
+
+        low = 0
+        high = num1 - 1
+
+        while(low <= high):
+            self.iterationCount+=1
+            mid = int((low+high)/2)
+
+            if(ls[mid] < rno):
+                low = mid + 1 
+            elif(ls[mid] > rno):
+                high = mid - 1
+            else:
+                return mid
+            
+        return -1
+    
+
+    def fibbonacciSearch(self,ls,num1):
+
+        self.iterationCount = 0
+        print("Enter the Roll Number you want to Search ? ")
+        rno = int(input())
+
+        fibo,k = [0,1,1],2
+
+        while fibo[k]<num1:
+            k+=1
+            fibo.append(fibo[k-1]+fibo[k-2])
+
+        offset = -1
+
+        while (fibo[k]>1):
+            self.iterationCount+=1
+
+            i = min(offset+fibo[k-2],num1-1)
+
+            if(ls[i]<rno):
+                k-=1
+                offset = i
+            elif(ls[i]>rno):
+                k-=2
+            else: 
+                return i
+
+        if(fibo[k-1] and ls[num1-1] == rno):
+            return num1-1                        # O(LOG N)
+        return -1
+
+
+
+ls = []
+
+print("Enter how many Students are there ? ")
+num1 = int(input())
+
+print("Enter ",num1, " Roll Numbers")
+
+for i in range(0,num1):
+    num = int(input())
+    ls.append(num)
+
+obj = Searching()
+
+c = 'y'
+
+while(c == 'y'):
+
+    print("Enter your choice")
+    print("1-Linear Search")
+    print("2-Sentinal Search")
+    print("3-Binary Search")
+    print("4-Fibonacci Search")
+    ch = int(input())
+
+    if(ch == 1):
+        a = obj.linearSearch(ls,num1);
+        if(a == -1):
+            print("Roll Number Not Found")
+        else:
+            print("Roll Number of Student found at ", a + 1, " Location ")
+        linearIter =  obj.iterationCount
+        print(f"No. of Iterations = {linearIter}")
+        
+    elif(ch == 2):
+
+        a = obj.SentinalSearch(ls,num1)
+        if(a == -1):
+            print("Roll Number Not Found")
+        else:
+            print("Roll Number of Student found at ", a + 1, " Location ")
+        sentinelIter =  obj.iterationCount
+        print(f"No. of Iterations = {sentinelIter}")
+
+    elif(ch == 3):
+
+        a = obj.binarySearch(ls,num1)
+        if(a == -1):
+            print("Roll Number Not Found")
+        else:
+            print("Roll Number of Student found at ", a + 1, " Location ")
+        binaryIter =  obj.iterationCount
+        print(f"No. of Iterations = {binaryIter}")
+
+    elif(ch == 4):
+
+        a = obj.fibbonacciSearch(ls,num1)
+        if(a == -1):
+            print("Roll Number Not Found")
+        else:
+            print("Roll Number of Student found at ", a + 1, " Location ")
+        fibonacciIter =  obj.iterationCount
+        print(f"No. of Iterations = {fibonacciIter}")
+
+
+    
+    print("Do you want to continue,Press 'y' or 'n' ")
+    c = input()
