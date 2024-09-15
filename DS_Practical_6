@@ -1,0 +1,62 @@
+class Sorting:
+
+    def quickSort(self,ls,low,high):
+
+        if low < high:
+            print("Pass", ls)
+            pivot = self.parititon(ls,low,high)
+            self.quickSort(ls,low,pivot - 1)
+            self.quickSort(ls,pivot + 1,high)
+
+    def parititon(self,ls,low,high):
+        pivot = ls[low]
+        i = low + 1
+        j = high
+
+        while True:
+
+            while(i <= j and ls[i] <= pivot):
+                i += 1
+            
+            while(j >= i and ls[j] >= pivot):
+                j -= 1
+
+            if(i > j):
+                break
+
+            temp = ls[i]
+            ls[i] = ls[j]
+            ls[j] = temp
+
+        temp = ls[low]
+        ls[low] = ls[j]
+        ls[j] = temp
+
+        return j
+    
+
+obj = Sorting()
+
+c = 'y'
+
+while(c == 'y'):
+
+    ls = []
+
+    print("Enter how students are there ? ")
+    num1 = int(input())
+
+    print("Enter ", num1, " Percentages of Student ")
+    for i in range(0,num1):
+        num = int(input())
+        ls.append(num)
+
+    print("The Percentages of Students entered are ", ls)
+
+    obj.quickSort(ls,0,num1 - 1);
+
+    print("The Percentages of Students after performing Quick Sort is ", ls)
+
+
+    print("Do you want to continue,Type 'y' or 'n'")
+    c = input()
