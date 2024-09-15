@@ -1,0 +1,128 @@
+# matrix addition,subt,mult
+class matrices:
+    def __init__(self):
+        self.a=[]
+        self.n1=0
+        self.n2=0
+        self.temp = []
+
+    def read_matrix(self):
+        self.n1 = int(input("Enter n1:"))
+        self.n2 = int(input("Enter n2:"))
+
+        for i in range(0, self.n1):
+            self.temp=[]
+            for j in range(0, self.n2):
+                num = int(input())
+                self.temp.append((num))
+            (self.a).append(self.temp)
+
+    def print_matrix(self):
+        for i in range(0, self.n1):
+            for j in range(0, self.n2):
+                print(self.a[i][j], end="  ")
+            print("\n")
+
+    def add_matrices(self,y):
+        if self.n1 != y.n1 or self.n2 != y.n2:
+            print("Matrices cannot be added; they must have the same dimensions.")
+            return None
+
+        add = []
+        sum_mat = matrices()
+        sum_mat.n1 = self.n1
+        sum_mat.n2 = self.n2
+
+        for i in range(0, self.n1):
+            temp = []
+            for j in range(0, self.n2):  # This should iterate over the number of columns (x.n2)
+                sum_value = self.a[i][j] + y.a[i][j]
+                temp.append(sum_value)
+            add.append(temp)
+
+        sum_mat.a = add
+        return sum_mat
+    
+    def subtract_matrices(self,y):
+        if self.n1 != y.n1 or self.n2 != y.n2:
+            print("Matrices cannot be added; they must have the same dimensions.")
+            return None
+        
+        sub=[]
+        sub_mat=matrices()
+        sub_mat.n1=self.n1
+        sub_mat.n2=self.n2
+        for i in range(0,self.n1):
+            temp=[]
+            for j in range(0,self.n2):
+                sub_val=self.a[i][j]-y.a[i][j]
+                temp.append(sub_val)
+            sub.append(temp)
+
+        sub_mat.a=sub
+        return sub_mat
+    
+    def multiply_matrices(self,y):
+        if (self.n2!=y.n1):
+            print("Matrices cannot be multiplied; number of colums in Matrix 1 must be equal to number of rows in Matrix 1")
+            return None
+        
+        product=[]
+        product_mat=matrices()
+        product_mat.n1=self.n1
+        product_mat.n2=y.n2
+
+        for i in range(0,self.n1):
+            product.append([0]*y.n2)
+
+        for i in range(0,self.n1):
+            for j in range(0,y.n2):
+                # print("\ni ,j : ",i,j)
+                for k in range(self.n2):
+                    product[i][j]+=self.a[i][k]*y.a[k][j]
+        
+        product_mat.a=product
+        return product_mat
+    
+    def transpose_matrix(self):
+        transpose=[]
+        temp=[]
+        for j in range(self.n2):
+            temp=[]
+            for i in range(self.n1):
+                temp.append(self.a[i][j])
+            transpose.append(temp)
+
+        self.a=transpose
+        self.n1,self.n2=self.n2,self.n1
+
+obj=matrices()
+obj.read_matrix()
+
+
+obj2=matrices()
+obj2.read_matrix()
+
+
+print("\nMatrix 1:\n")
+obj.print_matrix()
+print("\nMatrix 2:\n")
+obj2.print_matrix()
+
+obj3=obj.add_matrices(obj2)
+print("\nAddition:\n")
+obj3.print_matrix()
+
+obj4=obj.subtract_matrices(obj2)
+print("\nSubtraction:\n")
+obj4.print_matrix()
+
+obj5=obj.multiply_matrices(obj2)
+print("\nProduct of Matrix 1 and Matrix 2")
+obj5.print_matrix()
+
+print("\nMatrix 1:")
+obj.print_matrix()
+obj.transpose_matrix()
+print("\nTranspose of Matrix: ")
+obj.print_matrix()
