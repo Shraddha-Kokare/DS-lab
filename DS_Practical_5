@@ -1,0 +1,128 @@
+#Performing all the Sorting Operations Mentioned 
+
+class Sorting:
+        
+    def bubbleSort(self,ls,n):
+
+        flag = 0
+        for i in range(0,n - 1):
+            for j in range(0,n - 1):
+
+                if(ls[j] > ls[j + 1]):
+                    flag = 1
+                    temp = ls[j]
+                    ls[j] = ls[j + 1]
+                    ls[j + 1] = temp
+
+            if(flag == 0):
+                print("Percentages Already Sorted!!")
+                break;
+            print("Percentages After Pass " , i + 1 , ls)
+        
+        print("Sorted Percenatges using Bubble Sort ",ls)
+
+    def selectionSort(self,ls,n):
+
+        flag = 0
+        for i in range(0,n - 1):
+            for j in range(i + 1,n):
+
+                if(ls[i]  > ls[j]):
+                    flag = 1
+                    temp = ls[i]
+                    ls[i] = ls[j]
+                    ls[j] = temp
+                
+            if(flag == 0):
+                print("Percentages Already Sorted !! ")
+                break
+            
+            print("Percentages After Pass " , i + 1 , ls)
+
+        print("Sorted Percenatges using Selection Sort ",ls)
+
+    def insertionSort(self,ls,n):
+
+        for i in range(0,n):
+            temp = ls[i]
+            j = i - 1
+
+            while j >= 0 and ls[j] > temp:
+                ls[j + 1] = ls[j]
+                j = j - 1
+            
+            ls[j + 1] = temp
+
+        print("Sorted Percenatges using Insertion Sort ",ls)
+
+    def shellSort(self,ls,n):
+        
+        count = 0
+        flag = 0
+
+        gap = n // 2
+
+        while(gap > 0):
+            for i in range(gap,n):
+                temp = ls[i]
+                j = i
+
+                while(j >= gap and ls[j - gap] > temp):
+                    flag = 1
+                    ls[j] = ls[j - gap]
+                    j = j - gap
+                
+                ls[j] = temp
+                
+            if(flag == 0):
+                print("Percentages Already Sorted !! ")
+                break;
+
+            print("Percentages after ", count + 1, " Pass ", ls)
+            count += 1
+
+            gap = gap // 2
+
+        print("Sorted Percenatges using Shell Sort ",ls)
+        
+
+        
+        
+    
+
+obj = Sorting()
+
+c = 'y'
+
+print("Enter how many Students are there ? ")
+num1 = int(input())
+
+ls = []
+
+print("Enter ", num1, " Percentage of Students ")
+
+for i in range(0,num1):
+    num = int(input())
+    ls.append(num)
+
+while(c == 'y'):
+
+    print("1-Bubble Sort")
+    print("2-Selection Sort")
+    print("3-Insertion Sort")
+    print("4-Shell Sort")
+    ch = int(input())
+
+    if(ch == 1):
+        obj.bubbleSort(ls,num1)
+    elif(ch == 2):
+        obj.selectionSort(ls,num1)
+    elif(ch == 3):
+        obj.insertionSort(ls,num1)
+    elif(ch == 4):
+        obj.shellSort(ls,num1)
+    
+
+
+    print("Do you want to continue,Press 'y' or 'n' ")
+    c = input()
