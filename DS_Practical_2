@@ -1,0 +1,135 @@
+# Write a Python program to compute following operations on String: a) To
+# display word with the longest length b) To determines the frequency of
+# occurrence of particular character in the string c) To check whether given
+# string is palindrome or not d) To display index of first appearance of the
+# substring e) To count the occurrences of each word in a given string
+
+class StringOperations:
+    def __init__(self):
+        self.li=[]
+    def find_len(self,string):
+        len=0
+        for i in string:
+            len=len+1
+        return len
+    def create_list(self,string):
+        string+=" "
+        word=""
+        for i in string:
+            if(i==" "):
+                self.li.append(word)
+                word=""
+            else:
+                word+=i
+        print("\nList now is : ",self.li)
+    
+    def slice_op(self,string,st_index,len):
+        new_str=""
+        for i in range(0,len):
+            new_str+=string[st_index+i]
+        
+        return new_str
+    
+    def longest(self,string):
+        ind=0
+        long=self.find_len(self.li[0])
+#         print("\nLong =",long)
+        for i in range(0,len(self.li)):
+            leng=self.find_len(self.li[i])
+            print(self.li[i],"=",leng,end=" || ")
+            if(leng>long):
+                long=leng
+                ind=i
+        print("Given string : ",string)
+        print("\nLongest word =",self.li[ind]," with length =",long)
+                
+    def find_freq(self,string):
+        ch=input("Enter the character: ")
+        count=0
+        for i in string:
+            if i==ch:
+                count+=1
+        print("Given string : ",string)
+        print("\nThe character ",ch," appears ",count," times")
+
+    def is_palindrome(self):
+        word=input('Enter a string: ')
+        length=self.find_len(word)
+        rev=""
+        for i in range(length-1,-1,-1):
+            rev+=word[i]
+        if(word==rev):
+            print("The given string is a palindrome string")
+        else:
+            print("Not a palindrome string")
+
+    def find_first_index(self,string):
+        sbstring=input("Enter the substring: ")
+        l=self.find_len(sbstring)
+        flag=0
+        for i in range(self.find_len(string)):
+            if(sbstring==self.slice_op(string,i,l)):
+                ind=i
+                flag=1
+                break
+        
+        if(flag==1):
+            print("Given string : ",string)
+            print("Substring ",sbstring," found at index : ",ind)
+
+    def count_occurence(self,string):
+        words=[]
+        occ=[]
+        for i in self.li:
+            if(i not in words):
+                words.append(i)
+                count=0
+                for j in self.li:
+                    if(j==i):
+                        count+=1
+                occ.append(count)
+        
+        # print("Words = ",words)
+        # print("OCc   = ",occ)
+        print("Given string : ",string)
+        print("Frequency of occurence of each word is as follows: ")
+        word_count={words[i]:occ[i] for i in range(len(words))}
+        for i,j in word_count.items():
+            print(i," = ",j)
+
+    def draw_pattern(self):
+        print("="*60)
+
+obj=StringOperations()
+string=input("Enter a string: ")
+ch='y'
+obj.create_list(string)
+while(ch=='y'or ch=='Y'):
+    print("\nEnter the operation you want to perform:\n\n1.Display word with the longest length\n2.Determines the frequency of occurrence of particular character in the string\n3.check whether given string is palindrome or not\n4.Display index of first appearance of the substring\n5.Count the occurrences of each word in a given string\n")
+    n=int(input())
+    if(n==1):
+        obj.draw_pattern()
+        obj.longest(string)
+        obj.draw_pattern()
+    elif(n==2):
+        obj.draw_pattern()
+        obj.find_freq(string)
+        obj.draw_pattern()
+    elif(n==3):
+        obj.draw_pattern()
+        obj.is_palindrome()
+        obj.draw_pattern()
+    elif(n==4):
+        obj.draw_pattern()
+        obj.find_first_index(string)
+        obj.draw_pattern()
+    elif(n==5):
+        obj.draw_pattern()
+        obj.count_occurence(string)
+        obj.draw_pattern()
+    else:
+        print("Please enter a valid choice code(1-5)!!")
+    
+    ch=input("\nDo you want to continue (y for yes)?")
+else:
+    print("\n<<<<<<<<<<  Thank you for using our software  >>>>>>>>>>")
