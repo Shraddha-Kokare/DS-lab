@@ -1,0 +1,232 @@
+// Write C++ program for storing binary number using doubly linked lists.
+//  Write functions- a) To compute 1‘s and 2‘s complement b) Add two binary
+//  numbers
+#include <iostream>
+using namespace std;
+
+class NODE
+{
+public:
+    bool data;
+    NODE *prev;
+    NODE *next;
+
+    NODE()
+    {
+        prev = next = NULL;
+    }
+    NODE(int val)
+    {
+        data = (bool)val;
+        prev = next = NULL;
+    }
+};
+class BINARY
+{
+    NODE *Start = NULL;
+    NODE *End = NULL;
+
+public:
+    void DecimalToBinary(int num);
+    void displayBinary();
+    void onesComplement(int num);
+    void twosComplement(int num);
+    void addBitAtBeginning(bool n);
+    BINARY addBinary(BINARY b2);
+};
+void BINARY::DecimalToBinary(int num)
+{
+    int rem = num % 2;
+    num = num / 2;
+    NODE *newNode = new NODE(rem);
+    Start = newNode;
+    End = newNode;
+    while (num > 0)
+    {
+        rem = num % 2;
+        NODE *newNode = new NODE(rem);
+        newNode->next = Start;
+        Start->prev = newNode;
+        Start = newNode;
+        num = num / 2;
+    }
+}
+
+void BINARY::displayBinary()
+{
+    cout << "\n";
+    NODE *temp = Start;
+    while (temp != NULL)
+    {
+        cout << temp->data;
+        temp = temp->next;
+    }
+    cout << endl;
+}
+
+void BINARY::onesComplement(int num)
+{
+    DecimalToBinary(num);
+    // displayBinary();
+
+    NODE *temp = Start;
+    while (temp != NULL)
+    {
+        if (temp->data == 0)
+            temp->data = 1;
+        else
+            temp->data = 0;
+        temp = temp->next;
+    }
+
+    // cout << endl;
+    // cout << "One's complement of num: ";
+    // displayBinary();
+}
+
+void BINARY::twosComplement(int num)
+{
+    // DecimalToBinary(num);
+    // cout << "\nTwo's complement of :";
+    // displayBinary();
+    onesComplement(num);
+    displayBinary();
+
+    int carry = 1;
+    NODE *temp = End;
+
+    while (temp != NULL)
+    {
+        if (temp->data == 1 && carry == 1)
+        {
+            temp->data = 0;
+            carry = 1;
+        }
+        else if (temp->data == 0 && carry == 1)
+        {
+            temp->data = 1;
+            carry = 0;
+        }
+        else if (carry == 0)
+        {
+            break;
+        }
+        temp = temp->prev;
+    }
+    cout<<endl;
+    displayBinary();
+}
+
+void BINARY::addBitAtBeginning(bool n)
+{
+    NODE* newNode=new NODE(n);
+    if(Start==NULL)
+    {
+        Start=newNode;
+        End=newNode;
+    }
+    else{
+        newNode->next=Start;
+        Start->prev=newNode;
+        Start=newNode;
+    }
+}
+
+BINARY BINARY::addBinary(BINARY b2)
+{
+    BINARY Sum;
+    bool carry=false,s;
+    NODE *a=End;
+    NODE *b=b2.End;
+
+    while(a!=NULL && b!=NULL)
+    {
+        s=((a->data)^(b->data)^carry);
+        carry=((a->data&&b->data)||(carry&&a->data)||(carry&&b->data));
+        Sum.addBitAtBeginning(s);
+
+        a=a->prev;
+        b=b->prev;
+    }
+    while(a!=NULL)
+    {
+        s=(a->data^carry);
+        carry=a->data&&carry;
+        Sum.addBitAtBeginning(s);
+        a=a->prev;
+    }
+    while(b!=NULL)
+    {
+        s=(b->data^carry);
+        carry=b->data&&carry;
+        Sum.addBitAtBeginning(s);
+        b=b->prev;
+    }
+    if(carry==true)
+    {
+        Sum.addBitAtBeginning(carry);
+    }
+    return Sum;
+}
+
+int main()
+{
+    BINARY b1,b2,b3;
+    int num, ch;
+    // cout<<"Enter a decimal : ";
+    // cin>>num;
+    // b1.DecimalToBinary(num);
+    // b1.displayBinary();
+    do
+    {
+        cout << "\n1. Generate binary\n2.One's Complement\n3.Two's Complement\n4. Addition\n5.Exit\nEnter your choice: ";
+        cin >> ch;
+        switch (ch)
+        {
+        case 1:
+            cout << "\nEnter a number in decimal form:";
+            cin >> num;
+            b1.DecimalToBinary(num);
+            b1.displayBinary();
+            break;
+
+        case 2:
+            cout << "\nEnter a number in decimal form:";
+            cin >> num;
+            b1.onesComplement(num);
+            cout<<"\nOne's complement of "<<num<<": ";
+            b1.displayBinary();
+            break;
+
+        case 3:
+            cout << "\nEnter a number in decimal form:";
+            cin >> num;
+            b1.twosComplement(num);
+            cout<<"\nTwo's complement of "<<num<<": ";
+            b1.displayBinary();
+            break;
+        
+        case 4:
+            int num1,num2;
+            cout<<"\nEnter first no.:";
+            cin>>num1;
+            cout<<"\nEnter second no.:";
+            cin>>num2;
+            b1.DecimalToBinary(num1);
+            b2.DecimalToBinary(num2);
+            b3=b1.addBinary(b2);
+            b3.displayBinary();
+            break;
+        
+        case 5:
+            cout<<"\n<<<<<<<<<<<< THANK YOU FOR USING OUR SOFTWARE >>>>>>>>>>>>";
+            break;
+
+        default:
+
+            break;
+        }
+    } while (ch != 5);
+
+    return 0;
+}
