@@ -1,0 +1,72 @@
+// Implement C++ program for expression conversion as infix to
+// postfix and its evaluation using stack based on given
+// conditions: 1. Operands and operator, both must be single
+// character. 2. Input Postfix expression must be in a desired
+// format. 3. Only '+', '-', '*' and '/ ' operators are expected.
+#include<iostream>
+using namespace std;
+class expression{
+    char *exp;
+    int top;
+    expression(char* str)
+    {
+        exp=str;
+        top=-1;
+    }
+
+    int precedence(char ch)
+    {
+        if(ch=='*' || ch=='/')
+        {
+            return 2;
+        }
+        else if(ch=='+' || ch=='-')
+        {
+            return 1;
+        }
+        else
+            return -1;
+    }
+
+    bool infixToPostfix()
+    {
+        for(int i=0;exp[i]!='/0';i++)
+        {
+            if(exp[i]=='+' || exp[i]=='-' || exp[i]=='*')
+            {
+
+            }
+        }
+    }
+
+    void push(char ch)
+    {
+        if(top>50)
+        {
+            cout<<"\nStack overflow";
+        }
+        else{
+            exp[++top]=ch;
+        }
+    }
+
+    char pop()
+    {
+        char topItem=exp[top--];
+        return topItem;
+    }
+
+    char getTop()
+    {
+        char topItem=exp[top];
+        return topItem;
+    }
+};
+
+int main()
+{
+    char exp[50]="a+b*c";
+
+
+    return 0;
+}
