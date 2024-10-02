@@ -1,0 +1,133 @@
+// Queues are frequently used in computer programming, and a typical
+//  example is the creation of a job queue by an operating system. If the
+//  operating system does not use priorities, then the jobs are processed in the
+//  order they enter the system. Write C++ program for simulating job queue.
+//  Write functions to add job and delete job from queue.
+
+#include<iostream>
+#include<string>
+using namespace std;
+class JobNode
+{
+    public:
+        int JobId;
+        // string job;
+        JobNode* next;
+
+        JobNode()
+        {
+            next=NULL;
+        }
+        JobNode(int id)
+        {
+            JobId=id;
+            // job=name;
+            next=NULL;
+        }
+        ~JobNode()
+        {
+
+        }
+};
+
+class JobQueue
+{
+    JobNode* front;
+    JobNode* rear;
+    int jobCount=1000;
+
+    public:
+        JobQueue()
+        {
+            front=NULL;
+            rear=NULL;
+        }
+        void addJob()
+        {
+            JobNode* newJob=new JobNode(++jobCount);
+            if(isEmpty())
+            {
+                front=newJob;
+                rear=newJob;
+            }
+            else{
+                rear->next=newJob;
+                rear=newJob;
+            }
+            cout<<"Job added to queue id:"<<newJob->JobId;
+        }
+
+        void processJob()
+        {
+            if(isEmpty())
+            {
+                cout<<"No jobs to process. Queue is empty !!";
+            }
+            else
+            {
+                JobNode* temp=front;
+                front=front->next;
+                if(front==NULL){
+                    rear=NULL;
+                }
+                delete temp;
+            }
+        }
+
+        void displayQueue()
+        {
+            if(front==NULL)
+            {
+                cout<<"\nQueue is currently empty !!";
+            }
+            else
+            {
+                JobNode* temp=front;
+                while(temp!=NULL)
+                {
+                    cout<<"\n"<<temp->JobId;
+                    temp=temp->next;
+                }
+            }
+        }
+
+        bool isEmpty()
+        {
+            if(front==NULL)
+                return true;
+            else
+                return false; 
+        }
+        // bool
+};
+
+int main()
+{
+    int ch;
+    JobQueue jq;
+    cout<<"<<<<<<<<<<<<<<  Simulating a job queue  >>>>>>>>>>>>>>>";
+    do{
+        
+        cout<<"\n1. Add job\n2. Process(Remove) job\n3. Display jobs in queue\n4. Exit\nEnter your choice: ";
+        cin>>ch;
+        switch (ch)
+        {
+        case 1:
+            jq.addJob();
+            break;
+        case 2:
+            jq.processJob();
+            break;
+        case 3:
+            jq.displayQueue();
+            break;
+        case 4:
+            break;
+        default:
+            break;
+        }
+
+    }while(ch!=4);
+
+    return 0;
+}
