@@ -1,0 +1,191 @@
+//  A double-ended queue (deque) is a linear list in which additions and
+//  deletions may be made at either end. Obtain a data representation mapping
+//  a deque into a one-dimensional array. Write C++ program to simulate deque
+//  with functions to add and delete elements from either end of the deque.
+
+#include<iostream>
+using namespace std;
+
+#define N 5
+
+class Deque
+{
+    private:
+        int front,rear;
+        int queue[N];
+    
+    public:
+        Deque()
+        {
+            front=rear=-1;
+        }
+        bool isFull()
+        {
+            if((front==0 && rear==N-1) || (front==rear+1))
+            {
+                return true;
+            }
+            else    
+                return false;
+        }
+        bool isEmpty()
+        {
+            if(front==-1)
+                return true;
+            else
+                return false;
+        }
+
+        void enqueueFront(int item)
+        {
+            if(isFull())
+                cout<<"Queue is full";
+            else if(isEmpty())
+            {
+                front=rear=0;
+                queue[front]=item;
+            }
+            else if(front==0)
+            {
+                front=N-1;
+                queue[front]=item;
+            }
+            else{
+                queue[--front]=item;
+            }
+        }
+        void enqueueRear(int item)
+        {
+            if(isFull())
+                cout<<"\nQueue is full :()";
+            else if(isEmpty())
+            {
+                front=rear=0;
+                queue[front]=item;
+            }
+            else if(rear==N-1)
+            {
+                rear=0;
+                queue[rear]=item;
+            }
+            else{
+                queue[++rear]=item;
+            }
+        }
+        void processFront()
+        {
+            int temp;
+            if(isEmpty())
+                cout<<"\nQueue is Empty. Nothing to delete ";
+            else if(front==rear)
+            {
+                temp=queue[front];
+                front=rear=-1;
+                cout<<"\n"<<temp<<" deleted from front ";
+            }
+            else if(front==N-1)
+            {
+                temp=queue[front];
+                front=0;
+                cout<<"\n"<<temp<<" deleted from front ";
+            }
+            else{
+                temp=queue[front++];
+                cout<<"\n"<<temp<<" deleted from front ";
+            }
+        }
+
+        void processRear()
+        {
+            int temp;
+            if(isEmpty())
+                cout<<"\nQueue is Empty. Nothing to delete ";
+            else if(front==rear)
+            {
+                temp=queue[rear];
+                front=rear=-1;
+                cout<<"\n"<<temp<<" deleted from front ";
+            }
+            else if(rear==0)
+            {
+                temp=queue[front];
+                front=N-1;
+                cout<<"\n"<<temp<<" deleted from front ";
+            }
+            else{
+                temp=queue[front++];
+                cout<<"\n"<<temp<<" deleted from front ";
+            }
+        }
+        void display()
+        {
+            int temp=front;
+            if(front==-1)
+                cout<<"\nQueue is empty :(";
+            else{
+                cout<<endl;
+                while(temp!=rear)
+                {
+                    cout<<queue[temp]<<"\t";
+                    temp=(temp+1)%N;
+                }
+                cout<<queue[rear];
+            }
+        }
+};
+
+int main()
+{
+    cout<<"<<<<<<<<<<<<  DEQUE USING CIRCULAR ARRAY  >>>>>>>>>>>>>>";
+    int ch,num;
+    Deque deque;
+    do{
+        cout << "\n______________________";
+        cout << "\n1. Insert at Front" << endl;
+        cout << "2. Insert at Rear" << endl;
+        cout << "3. Delete from Front" << endl;
+        cout << "4. Delete from Rear" << endl;
+        cout << "5. Display Deque" << endl;
+        cout << "6. Exit" << endl;
+        cout << "Enter your choice: ";
+        cin >> ch;
+
+        switch (ch)
+        {
+        case 1:
+            cout<<"\nEnter the number to insert : ";
+            cin>>num;
+            deque.enqueueFront(num);
+            break;
+        
+        case 2:
+            cout<<"\nEnter the number to insert : ";
+            cin>>num;
+            deque.enqueueRear(num);
+            break;
+        
+        case 3:
+            deque.processFront();
+            break;
+
+        case 4:
+            deque.processRear();
+            break;
+
+        case 5:
+            deque.display();
+            break;
+
+        case 6:
+            
+            break;
+        
+        default:
+            break;
+        }
+
+    }while(ch!=6);
+
+
+    return 0;
+}
