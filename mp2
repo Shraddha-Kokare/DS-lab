@@ -1,0 +1,53 @@
+
+section .bss
+
+res resb 20
+stringlen resb 16
+
+
+global _start
+section .text
+
+_start:
+	
+	mov rax,0
+	mov rdi,0
+	mov rsi,res
+	mov rdx,20
+	syscall
+	
+	mov rbx,0
+	
+	mov rbx,rax  
+	mov rdi,stringlen
+	mov rcx,16
+	
+l1:	
+	rol rbx,04
+	mov al,bl
+	and al,0fH
+	cmp al,09H
+	jg l2
+	add al,30H
+	jmp 3
+	
+l2:
+	add al,37H
+	
+l3:
+	mov [rdi],al
+	inc rdi
+	dec cx
+	jnz l1
+	
+	mov rax,1
+	mov rdi,1
+	mov rsi,stringlen
+	add rsi,rbx
+	mov rdx,16
+	syscall
+	
+	
+	mov rax,60
+	mov rdi,00
+	syscall
