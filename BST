@@ -34,6 +34,10 @@ public:
 	void showInOrder(BSTNode* root);
 	void showPostOrder(BSTNode* root);
 	int findHeight(BSTNode* root,int max);
+	int findMin(BSTNode* root);
+	int findMax(BSTNode* root);
+	void mirror(BSTNode*& root);
+	void search(BSTNode* root);
 };
 
 BSTNode* BSTOperations::createTree(BSTNode* root)
@@ -159,19 +163,16 @@ void BSTOperations::showPostOrder(BSTNode* root)
         }
         else
         {
-            // Peek the node from the stack
             BSTNode* peekNode = s.top();
 
-            // If the right child is null or has been processed already, visit the node
             if (peekNode->right == NULL || peekNode->right == prev)
             {
                 cout << peekNode->data << " - ";
                 s.pop();
-                prev = peekNode; // Mark this node as visited
+                prev = peekNode;
             }
             else
             {
-                // Otherwise, push the right child to the stack
                 current = peekNode->right;
             }
         }
@@ -203,19 +204,112 @@ int BSTOperations::findHeight(BSTNode* root,int max)
 		return max;
 }
 
+int BSTOperations::findMin(BSTNode* root)
+{
+	BSTNode* temp=root;
+
+	while(temp->left)
+	{
+		temp=temp->left;
+	}
+
+	return temp->data;
+}
+
+
+int BSTOperations::findMax(BSTNode* root)
+{
+	BSTNode* temp=root;
+
+	while(temp->right)
+	{
+		temp=temp->right;
+	}
+
+	return temp->data;
+}
+
+void BSTOperations::mirror(BSTNode*& root)
+{
+	if(root==NULL)
+		return;
+
+	if(root->left==NULL && root->right==NULL)
+	{
+		return;
+	}
+	else{
+		BSTNode* swap=root->left;
+		root->left=root->right;
+		root->right=swap;
+
+		mirror(root->left);
+		mirror(root->right);
+	}
+}
+
+void BSTOperations::search(BSTNode* root)
+{
+	int key;
+	cout<<"\n\nEnter the value to search: ";
+	cin>>key;
+
+	BSTNode* current=root;
+	int comp=1;
+
+	while(current!=NULL)
+	{
+		if(key==current->data)
+		{
+			cout<<"Key found at level "<<current->level<<" in "<<comp<<" comparisions";
+			break;
+		}
+		else if(key<current->data)
+		{
+			current=current->left;
+		}
+		else{
+			current=current->right;
+		}
+		comp++;
+	}
+
+	if(current==NULL)
+	{
+		cout<<"\nKey is not present";
+	}
+}
+
 int main() {
 	int max=0;
 	BSTOperations bop;
 	BSTNode* newroot=NULL;
 	newroot=bop.createTree(newroot);
+	cout<<"\n\nPreorder: ";
 	bop.showPreOrder(newroot);
-	cout<<"\nPostorder: ";
+	cout<<"\n\nPostorder: ";
 	bop.showPostOrder(newroot);
-	cout<<"\nInorder: ";
+	cout<<"\n\nInorder: ";
 	bop.showInOrder(newroot);
+	cout<<endl;
 
 	int height=bop.findHeight(newroot, max);
-	cout<<"\nHeight = "<<height;
+	cout<<"\n\nHeight = "<<height;
+
+	cout<<"\nThe number of nodes in the longest path: "<<height+1;
+
+	int min=bop.findMin(newroot);
+	cout<<"\n\nMinimum value in tree: "<<min;
+
+	max=bop.findMax(newroot);
+	cout<<"\n\nMaximum value in tree: "<<max;
+
+	bop.search(newroot);
+
+	cout<<"\n\nAfter mirroring, Preorder Traversal:";
+	bop.mirror(newroot);
+	bop.showPreOrder(newroot);
+
 
 	return 0;
 }
