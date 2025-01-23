@@ -1,0 +1,150 @@
+section .data
+str1 db "Enter string: "
+str1len equ $-str1
+
+str2 db "Your entered string: "
+str2len equ $-str2
+
+
+section .bss
+
+res resb 7
+reslen resb 2
+length resb 2
+
+global _start
+
+section .text
+
+_start:
+	mov rax,1
+	mov rdi,1
+	mov rsi,str1
+	mov rdx,str1len
+	syscall
+	
+	mov rax,0
+	mov rdi,0
+	mov rsi,res
+	mov rdx,15
+	syscall
+	
+	mov rax,1
+	mov rdi,1
+	mov rsi,str2
+	mov rdx,str2len
+	syscall
+	
+	mov rax,1
+	mov rdi,1
+	mov rsi,res
+	mov rdx,reslen
+	syscall
+	
+	dec rax
+	mov rbx,rax
+	mov rcx,16H
+	mov rdi,res
+	
+_loop:
+	rol rbx,04H
+	mov al,bl
+	and al,0FH
+	cmp al,09
+	jg _b2
+	add AL,30H
+	jmp _b3
+	
+_b2:
+	add AL,37H
+
+_b3:	
+	mov byte[rdi],AL
+	inc rdi
+	dec rcx
+	jnz _loop
+	
+
+	mov rax,1
+	mov rdi,1
+	mov [rsi],rdi		
+	mov rdx,2
+	syscall
+	jmp _loop
+	
+	
+	mov rax,60
+	mov rdi,00
+	syscall
+
+
+
+
+
+
+
+
+section .data
+str1 db "Enter string: "
+str1len equ $-str1
+
+str2 db "Your entered string: "
+str2len equ $-str2
+
+section .bss
+res resb 15         ; Buffer for the entered string (max 15 characters)
+reslen resb 1       ; Store the length of the entered string (1 byte)
+
+section .text
+global _start
+
+_start:
+    ; Print prompt: "Enter string: "
+    mov rax, 1          ; syscall number for sys_write
+    mov rdi, 1          ; file descriptor for stdout
+    mov rsi, str1       ; pointer to the "Enter string: " string
+    mov rdx, str1len    ; length of the prompt string
+    syscall
+
+    ; Read input string from the user
+    mov rax, 0          ; syscall number for sys_read
+    mov rdi, 0          ; file descriptor for stdin
+    mov rsi, res        ; buffer to store the input
+    mov rdx, 15         ; maximum number of characters to read
+    syscall
+    mov [reslen], al    ; store the number of characters read in reslen
+
+    ; Print prompt: "Your entered string: "
+    mov rax, 1          ; syscall number for sys_write
+    mov rdi, 1          ; file descriptor for stdout
+    mov rsi, str2       ; pointer to the "Your entered string: " string
+    mov rdx, str2len    ; length of the prompt string
+    syscall
+
+    ; Print the entered string
+    mov rax, 1          ; syscall number for sys_write
+    mov rdi, 1          ; file descriptor for stdout
+    mov rsi, res        ; buffer containing the input string
+    movzx rdx, byte [reslen]  ; get the length from reslen
+    syscall
+
+    ; Print the length of the string
+    
+    dec rax
+    movzx rax, byte [reslen]   ; load the length from reslen
+    add rax, '0'               ; convert length to ASCII (assuming it's < 10)
+    mov rdi, 1                 ; file descriptor for stdout
+    mov rsi, length            ; pointer to the length buffer
+    mov [length], al           ; store the ASCII value of the length in 'length'
+
+    mov rax, 1                 ; syscall number for sys_write
+    mov rdx, 1                 ; print a single character
+    syscall
+
+    ; Exit the program
+    mov rax, 60                ; syscall number for sys_exit
+    xor rdi, rdi               ; exit status 0
+    syscall
+
+section .bss
+length resb 1                  ; buffer to store the ASCII representation of the length
