@@ -1,0 +1,194 @@
+//============================================================================
+// Name        : ThreadedBST.cpp
+// Author      : 
+// Version     :
+// Copyright   : Your copyright notice
+// Description : Hello World in C++, Ansi-style
+//============================================================================
+
+#include <iostream>
+#include <stack>
+using namespace std;
+
+class TBTNode
+{
+public:
+	TBTNode(int val)
+	{
+		data=val;
+		left=right=NULL;
+		lthread=rthread=false;
+	}
+	int data;
+	TBTNode* left;
+	TBTNode* right;
+	bool lthread;
+	bool rthread;
+};
+
+class TBTOperations
+{
+public:
+	TBTNode* root;
+	TBTOperations()
+	{
+		root=NULL;
+	}
+	void insert_Nodes(TBTNode *root,TBTNode *newNode);
+	TBTNode* leftmost(TBTNode* node);
+	void threaded_inorder(TBTNode* root);
+	void preOrderTraversal(TBTNode* root);
+};
+
+void TBTOperations::insert_Nodes(TBTNode *root,TBTNode *newNode)
+{
+	int flag=0;
+
+	while(flag!=1)
+	{
+		if(newNode->data < root->data)
+		{
+			if(root->left==NULL || root->lthread==true)
+			{
+
+				newNode->left=root->left;
+				newNode->lthread=root->lthread;
+
+				newNode->right=root;
+				newNode->rthread=true;
+
+				root->left=newNode;
+				root->lthread=false;
+
+				flag=1;
+
+			}
+
+			else
+			{
+				root=root->left;
+			}
+		}
+		else
+		{
+			if(root->right==NULL || root->rthread==true)
+			{
+				newNode->right=root->right;
+				newNode->rthread=root->rthread;
+
+				newNode->left=root;
+				newNode->lthread=true;
+
+				root->right=newNode;
+				root->rthread=false;
+
+				flag=1;
+			}
+			else
+			{
+				root=root->right;
+			}
+
+		}
+	}
+}
+
+TBTNode* TBTOperations::leftmost(TBTNode* node)
+{
+	if(node==NULL)
+	{
+		return NULL;
+	}
+
+	while(node->left && node->lthread==false)
+	{
+		node=node->left;
+	}
+
+	return node;
+}
+
+void TBTOperations::threaded_inorder(TBTNode* root)
+{
+	TBTNode *current;
+
+	current=leftmost(root);
+	cout<<"Inorder traversal: ";
+
+	while(current!=NULL)
+	{
+		cout<<current->data<<" - ";
+
+		if(current->rthread==true)
+		{
+			current=current->right;
+		}
+		else
+		{
+			current=leftmost(current->right);
+		}
+	}
+}
+
+void TBTOperations::preOrderTraversal(TBTNode* root)
+{
+
+	cout<<"\nPreorder Traversal: ";
+	stack<TBTNode*> s;
+
+		s.push(root);
+
+		while(!s.empty())
+		{
+			TBTNode *temp=s.top();
+			cout<<temp->data<<" - ";
+
+			s.pop();
+
+			if(temp->right && temp->rthread==false)
+				s.push(temp->right);
+
+			if(temp->left && temp->lthread==false)
+				s.push(temp->left);
+		}
+
+}
+
+
+int main() {
+	cout << "!!!Hello World!!!" << endl; // prints !!!Hello World!!!
+
+	int n,val;
+	TBTOperations t;
+	cout<<"\nCreate TBST \n";
+	cout<<"\nEnter the number of nodes: ";
+	cin>>n;
+
+	for(int i=0;i<n;i++)
+	{
+		cout<<"\nEnter value: ";
+		cin>>val;
+		TBTNode* newNode=new TBTNode(val);
+
+		if(t.root==NULL)
+		{
+			t.root=newNode;
+		}
+		else
+		{
+			t.insert_Nodes(t.root, newNode);
+		}
+	}
+
+	t.threaded_inorder(t.root);
+	t.preOrderTraversal(t.root);
+	
+	do
+	{
+		cout<<"Enter node to delete: "
+		c
+	}while(ch!=3);
+
+
+	return 0;
+}
