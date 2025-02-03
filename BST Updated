@@ -1,0 +1,406 @@
+//============================================================================
+// Name        : BinarySearchTree.cpp
+// Author      : 
+// Version     :
+// Copyright   : Your copyright notice
+// Description : Hello World in C++, Ansi-style
+//============================================================================
+
+//Construct the binary search tree by inserting the values in given order.
+//After constructing binary search tree perform following operations
+//1) Insert a new node 2) Find numbers of node in longest path 3) Mini-
+//mum and maximum data value found in tree 4) Change a tree so that the
+//roles of the left and right pointers are swapped at every node 5) Search
+//an element
+
+#include <iostream>
+#include<stack>
+using namespace std;
+
+class BSTNode
+{
+public:
+	int data;
+	int level;
+	BSTNode* left;
+	BSTNode* right;
+};
+
+class BSTOperations
+{
+public:
+	BSTNode* createTree(BSTNode* root);
+	void showPreOrder(BSTNode* root);
+	void showInOrder(BSTNode* root);
+	void showPostOrder(BSTNode* root);
+	int findHeight(BSTNode* root,int max);
+	int findMin(BSTNode* root);
+	int findMax(BSTNode* root);
+	void mirror(BSTNode*& root);
+	void search(BSTNode* root);
+	void deleteNode(BSTNode* root,int val);
+};
+
+BSTNode* BSTOperations::createTree(BSTNode* root)
+{
+	int count,level,flag;
+
+	cout<<"\nEnter the number of nodes: ";
+	cin>>count;
+
+	for(int i=0;i<count;i++)
+	{
+		BSTNode* newNode=new BSTNode;
+		cout<<"\nEnter data for new node: ";
+		cin>>newNode->data;
+
+		newNode->left=NULL;
+		newNode->right=NULL;
+
+		if(root==NULL)
+			root=newNode;
+		else{
+			BSTNode* parent=root;
+			level=0;
+			flag=0;
+
+			while(flag!=1)
+			{
+				if(newNode->data<=parent->data)
+				{
+					if(parent->left==NULL)
+					{
+						level++;
+						parent->left=newNode;
+						newNode->level=level;
+						flag=1;
+					}
+					else
+					{
+						parent=parent->left;
+						level++;
+					}
+				}
+				else
+				{
+					if(parent->right==NULL)
+					{
+											level++;
+											parent->right=newNode;
+											newNode->level=level;
+											flag=1;
+					}
+					else
+					{
+											parent=parent->right;
+											level++;
+					}
+				}
+			}
+		}
+	}
+	return root;
+}
+
+void BSTOperations::showPreOrder(BSTNode* root)
+{
+	stack<BSTNode*> s;
+
+	s.push(root);
+
+	while(!s.empty())
+	{
+		BSTNode *temp=s.top();
+		cout<<temp->data<<" - ";
+
+		s.pop();
+
+		if(temp->right)
+			s.push(temp->right);
+
+		if(temp->left)
+			s.push(temp->left);
+	}
+}
+
+void BSTOperations::showInOrder(BSTNode* root)
+{
+    stack<BSTNode*> s;
+    BSTNode* current = root;
+
+    while (current != NULL || !s.empty())
+    {
+        while (current != NULL)
+        {
+            s.push(current);
+            current = current->left;
+        }
+
+        current = s.top();
+        s.pop();
+
+        cout << current->data << " - ";
+
+        current = current->right;
+    }
+}
+
+
+void BSTOperations::showPostOrder(BSTNode* root)
+{
+    if (root == NULL)
+        return;
+
+    stack<BSTNode*> s;
+    BSTNode* current = root;
+    BSTNode* prev = NULL;
+
+    while (!s.empty() || current != NULL)
+    {
+        if (current != NULL)
+        {
+            s.push(current);
+            current = current->left;
+        }
+        else
+        {
+            BSTNode* peekNode = s.top();
+
+            if (peekNode->right == NULL || peekNode->right == prev)
+            {
+                cout << peekNode->data << " - ";
+                s.pop();
+                prev = peekNode;
+            }
+            else
+            {
+                current = peekNode->right;
+            }
+        }
+    }
+}
+
+
+int BSTOperations::findHeight(BSTNode* root,int max)
+{
+	stack<BSTNode*> s;
+
+		s.push(root);
+
+		while(!s.empty())
+		{
+			BSTNode *temp=s.top();
+			cout<<endl<<temp->data<<"(level="<<temp->level<<")";
+			if(max<temp->data)
+				max=temp->level;
+
+			s.pop();
+
+			if(temp->right)
+				s.push(temp->right);
+
+			if(temp->left)
+				s.push(temp->left);
+		}
+		return max;
+}
+
+int BSTOperations::findMin(BSTNode* root)
+{
+	BSTNode* temp=root;
+
+	while(temp->left)
+	{
+		temp=temp->left;
+	}
+
+	return temp->data;
+}
+
+
+int BSTOperations::findMax(BSTNode* root)
+{
+	BSTNode* temp=root;
+
+	while(temp->right)
+	{
+		temp=temp->right;
+	}
+
+	return temp->data;
+}
+
+void BSTOperations::mirror(BSTNode*& root)
+{
+	if(root==NULL)
+		return;
+
+	if(root->left==NULL && root->right==NULL)
+	{
+		return;
+	}
+	else{
+		BSTNode* swap=root->left;
+		root->left=root->right;
+		root->right=swap;
+
+		mirror(root->left);
+		mirror(root->right);
+	}
+}
+
+void BSTOperations::search(BSTNode* root)
+{
+	int key;
+	cout<<"\n\nEnter the value to search: ";
+	cin>>key;
+
+	BSTNode* current=root;
+	int comp=1;
+
+	while(current!=NULL)
+	{
+		if(key==current->data)
+		{
+			cout<<"Key found at level "<<current->level<<" in "<<comp<<" comparisions";
+			break;
+		}
+		else if(key<current->data)
+		{
+			current=current->left;
+		}
+		else{
+			current=current->right;
+		}
+		comp++;
+	}
+
+	if(current==NULL)
+	{
+		cout<<"\nKey is not present";
+	}
+}
+
+void BSTOperations::deleteNode(BSTNode* root,int val)
+{
+//	BSTNode* rootNode=root;
+	BSTNode* parent=NULL;
+	BSTNode* current=root;
+
+	if(current==NULL)
+		return;
+
+	while(current!=NULL)
+		{
+			if(val==current->data)
+			{
+				cout<<"Key found at level "<<current->level;
+				break;
+			}
+			else if(val<current->data)
+			{
+				parent=current;
+				current=current->left;
+			}
+			else{
+				parent=current;
+				current=current->right;
+			}
+		}
+
+
+
+		if(current==NULL)
+		{
+			cout<<"\nKey is not present";
+		}
+		else
+		{
+			if(current->left==NULL && current->right==NULL)
+			{
+				BSTNode* del=current;
+
+				if(current==parent->left)
+				{
+					parent->left=NULL;
+				}
+				else
+				{
+					parent->right=NULL;
+				}
+
+				delete del;
+			}
+			else if(current->left!=NULL && current->right!=NULL)
+			{
+				BSTNode* del=current;
+
+				delete del;
+			}
+			else
+			{
+				cout<<"Hello 1 child";
+				BSTNode* del=current;
+
+				if(current->left)
+				{
+					current=current->left;
+				}
+				else
+				{
+					current=current->right;
+				}
+
+				delete del;
+				cout<<"\nDeleted..........";
+			}
+		}
+}
+
+int main() {
+	int max=0;
+	BSTOperations bop;
+	BSTNode* newroot=NULL;
+	newroot=bop.createTree(newroot);
+	cout<<"\n\nPreorder: ";
+	bop.showPreOrder(newroot);
+	cout<<"\n\nPostorder: ";
+	bop.showPostOrder(newroot);
+	cout<<"\n\nInorder: ";
+	bop.showInOrder(newroot);
+	cout<<endl;
+
+	int height=bop.findHeight(newroot, max);
+	cout<<"\n\nHeight = "<<height;
+
+	cout<<"\nThe number of nodes in the longest path: "<<height+1;
+
+	int min=bop.findMin(newroot);
+	cout<<"\n\nMinimum value in tree: "<<min;
+
+	max=bop.findMax(newroot);
+	cout<<"\n\nMaximum value in tree: "<<max;
+
+	bop.search(newroot);
+
+//	cout<<"\n\nAfter mirroring, Preorder Traversal:";
+//	bop.mirror(newroot);
+//	bop.showPreOrder(newroot);
+	int val,ch;
+	do
+		{
+			cout<<"Enter node to delete: ";
+			cin>>val;
+
+			bop.deleteNode(newroot,val);
+
+			cout<<"\nAfter deleting:";
+			bop.showPreOrder(newroot);
+
+			cout<<"Display: press 1 else press 2: ";
+			cin>>ch;
+		}while(ch!=2);
+
+
+	return 0;
+}
