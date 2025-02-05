@@ -39,6 +39,7 @@ public:
 	void mirror(BSTNode*& root);
 	void search(BSTNode* root);
 	void deleteNode(BSTNode* root,int val);
+	BSTNode* leftmost(BSTNode* root);
 };
 
 BSTNode* BSTOperations::createTree(BSTNode* root)
@@ -281,6 +282,18 @@ void BSTOperations::search(BSTNode* root)
 	}
 }
 
+BSTNode* BSTOperations::leftmost(BSTNode* root)
+{
+	BSTNode* temp=root;
+
+	while(temp->left)
+	{
+		temp=temp->left;
+	}
+
+	return temp;
+}
+
 void BSTOperations::deleteNode(BSTNode* root,int val)
 {
 //	BSTNode* rootNode=root;
@@ -328,31 +341,68 @@ void BSTOperations::deleteNode(BSTNode* root,int val)
 				{
 					parent->right=NULL;
 				}
+				cout<<"\nLeaf node deleted";
 
 				delete del;
 			}
 			else if(current->left!=NULL && current->right!=NULL)
 			{
-				BSTNode* del=current;
+//				BSTNode* inorderSuccessor=leftmost(current->right);
+				int temp=current->data;
+//				current->data=inorderSuccessor->data;
+//				inorderSuccessor->data=temp;
 
-				delete del;
+//				cout<<
+
+				BSTNode* leftmost=current->right;
+				BSTNode* parentleft=current;
+				while(leftmost->left)
+				{
+					parentleft=leftmost;
+					leftmost=leftmost->left;
+				}
+
+				current->data=leftmost->data;
+				leftmost->data=temp;
+				cout<<"\nSwapped";
+
+
+				if(leftmost==parentleft->left)
+				{
+					parentleft->left=leftmost->right;
+				}
+				else if(leftmost==parentleft->right)
+				{
+					parentleft->right=leftmost->right;
+				}
+
+				delete leftmost;
 			}
 			else
 			{
-				cout<<"Hello 1 child";
 				BSTNode* del=current;
-
+				BSTNode* child;
 				if(current->left)
 				{
-					current=current->left;
+					child=current->left;
 				}
-				else
+				else if(current->right)
 				{
-					current=current->right;
+					child=current->right;
+				}
+
+
+				if(current==parent->left)
+				{
+					parent->left=child;
+				}
+				else if (current==parent->right)
+				{
+					parent->right=child;
 				}
 
 				delete del;
-				cout<<"\nDeleted..........";
+				cout<<"\nDeleted node with 1 child......";
 			}
 		}
 }
