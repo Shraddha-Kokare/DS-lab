@@ -1,0 +1,79 @@
+//============================================================================
+// Name        : GraphAdjMatrix.cpp
+// Author      : Shraddha
+// Version     :
+// Copyright   : Your copyright notice
+// Description : Hello World in C++, Ansi-style
+//============================================================================
+#include <stack>
+#include <vector>
+#include <iostream>
+
+using namespace std;
+class Graph
+{
+	int n=5;
+	int matrix[5][5];
+	stack<int> Stack;
+	vector<int> visited;
+
+public:
+		void createGraph();
+		void displayMatrix();
+		void findShortestPath();
+		void findMin();
+};
+
+void Graph::createGraph()
+{
+	cout<<"\nEnter the matrix: ";
+	for(int i=0;i<n;i++)
+	{
+		for(int j=0;j<n;j++)
+			cin>>matrix[i][j];
+	}
+}
+
+void Graph::displayMatrix()
+{
+	cout<<"\n\nAdjacency Matrix for the Graph: \n";
+	for(int i=0;i<n;i++)
+	{
+		cout<<endl;
+		for(int j=0;j<n;j++)
+		{
+			cout<<matrix[i][j]<<"\t";
+		}
+
+	}
+}
+
+void Graph::findShortestPath()
+{
+	
+}
+
+int main() {
+
+	cout << "!!!Hello World!!!" << endl; // prints !!!Hello World!!!
+	int ch=0;
+	Graph g;
+	do{
+		cout<<"\n\n1. Create Matrix\t2.Display Matrix\t3.Find Shortest Path\t4. Exit\nEnter your choice: ";
+		cin>>ch;
+
+		if(ch==1)
+		{
+			g.createGraph();
+		}
+		else if(ch==2)
+			g.displayMatrix();
+		else if(ch==3)
+			g.findShortestPath();
+		else if(ch==4)
+			break;
+		else continue;
+	}while(ch!=4);
+
+	return 0;
+}
