@@ -1,0 +1,56 @@
+//============================================================================
+// Name        : AVL_Tree.cpp
+// Author      : ShraddhaKokare
+// Version     :
+// Copyright   : Your copyright notice
+// Description : Hello World in C++, Ansi-style
+//============================================================================
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Node
+{
+public:
+	int key;
+	string value;
+	struct Node *left;
+	struct Node *right;
+	int height;
+};
+
+int getHeight(struct Node *n)
+{
+	if(n==NULL)
+		return 0;
+	else
+		return n->height;
+}
+
+Node* createNode(int key,string val)
+{
+	Node* newNode;
+	newNode->key=key;
+	newNode->value=val;
+	newNode->left=NULL;
+	newNode->right=NULL;
+	newNode->height=1;
+	
+	return newNode;
+}
+
+int getBalanceFactor(Node* n)
+{
+	if(n==NULL)
+		return 0;
+	else
+	{
+		return (getHeight(n->left) - getHeight(n->right));
+	}
+}
+
+int main() {
+	cout << "!!!Hello World!!!" << endl; // prints !!!Hello World!!!
+	return 0;
+}
